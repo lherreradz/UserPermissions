@@ -5,7 +5,7 @@ namespace Domain.Entities
     public class PermissionType
     {
         [Key]
-        public Guid Guid { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public string Description { get; set; }

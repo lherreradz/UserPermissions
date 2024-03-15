@@ -5,7 +5,7 @@ namespace Domain.Entities
     public class Employee
     {
         [Key]
-        public Guid Guid { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [MinLength(3)]

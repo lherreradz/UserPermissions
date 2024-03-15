@@ -4,7 +4,7 @@ namespace Domain.Interfaces
 {
     public interface IPermissionRepository : IGenericRepository<Permission>
     {
-        Permission GetPermissionById(Guid guid);
+        Permission GetPermissionById(int id);
         IEnumerable<Permission> GetPermissions();
     }
 }

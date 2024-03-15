@@ -11,12 +11,12 @@ namespace Domain.Entities
     public class Permission
     {
         [Key]
-        public Guid Guid { get; set; }
+        public int Id { get; set; }
 
         [ForeignKey("Employee")]
-        public Guid EmployeeId { get; set; }
+        public int EmployeeId { get; set; }
 
         [ForeignKey("PermissionType")]
-        public Guid PermissionTypeId { get; set; }
+        public int PermissionTypeId { get; set; }
     }
 }

@@ -9,9 +9,9 @@ namespace DataAccess.Repositories
         public PermissionRepository(ApplicationContext context) : base(context)
         {
         }
-        public Permission GetPermissionById(Guid guid)
+        public Permission GetPermissionById(int id)
         {
-            return _context.Permission.First(d => d.Guid == guid);
+            return _context.Permission.First(d => d.Id == id);
         }
         public IEnumerable<Permission> GetPermissions()
         {

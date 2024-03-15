@@ -1,0 +1,72 @@
+version: '3.4'
+
+networks:
+  default:
+
+services:
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+      KAFKA_CREATE_TOPICS: "permissionstopic:1:1"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks: 
+      - default
+
+  elasticsearch-repository:
+    image: elasticsearch:5
+    container_name: elasticsearch-repository
+    ports: 
+      - "9200:9200"
+      - "9300:9300"
+    networks: 
+      - default
+ 
+  userPermissiondb:
+    container_name: db-userPermission
+    image: mcr.microsoft.com/mssql/server:2019-latest 
+    environment:
+      - SA_PASSWORD=Password123
+      - ACCEPT_EULA=Y
+    ports:
+      - "8002:1433"
+    networks: 
+    - default
+
+  webapi:
+    container_name: webapi-userPermission
+    image: ${DOCKER_REGISTRY-}webapi
+    build:
+      context: .
+      dockerfile: WebApi/Dockerfile
+    ports:
+      - "8001:80"
+    depends_on:
+      - userPermissiondb
+      - kafka
+    environment:
+      - DB_HOST = userPermissiondb
+      - DB_PASSWORD = Password123
+      - DB_NAME = UserPermission
+      - DB_USER = sa
+      - DB_CONNECTION_STRING=Server=userPermissiondb;Database=UserPermission;User Id=sa;Password=Password123
+      - KAFKA_HOST = kafka
+      - KAFKA_PORT = 9092
+      - KAFKA_TOPIC = permissionstopic
+      - ES_ConnectionString = http://elasticsearch-repository:9200
+    networks: 
+      - default
+
+
+    
